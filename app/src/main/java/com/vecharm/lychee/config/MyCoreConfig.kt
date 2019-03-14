@@ -15,6 +15,8 @@ import com.vecharm.lychee.http.config.defaults.DefaultResponseHandler
 import com.vecharm.lychee.http.config.defaults.ResponseBean
 import com.vecharm.lychee.http.core.md5
 import okhttp3.Request
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 class MyCoreConfig(val context: Application) : DefaultCoreConfig() {
@@ -24,6 +26,7 @@ class MyCoreConfig(val context: Application) : DefaultCoreConfig() {
     override fun getCookieJar() = PersistentCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(context))
 
     override fun getRequestConfig() = MyRequestConfig()
+
 
     init {
         /*

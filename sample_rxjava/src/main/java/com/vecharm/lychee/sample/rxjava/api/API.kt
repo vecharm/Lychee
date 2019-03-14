@@ -11,7 +11,7 @@ import java.io.File
 interface API {
 
     @POST("hello")
-    fun hello(): Call<ResultBean<String>>
+    fun hello(): Observable<ResultBean<String>>
 
     @Download
     @GET("https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk")
@@ -23,12 +23,12 @@ interface API {
 
 
     @FormUrlEncoded
-    @POST("http://192.168.2.202:8888/xboot/upload/file")
-    fun upload(@Field("file") @FileType("apk") file: File): Call<ResultBean<UploadResult>>
+    @POST("http://192.168.2.202:8888/service/upload/file")
+    fun upload(@Field("file") @FileType("apk") file: File): Observable<ResultBean<UploadResult>>
 
 
     @Multipart
     @MultiFileType("apk")
-    @POST("http://192.168.2.202:8888/xboot/upload/file")
-    fun uploadMap(@PartMap map: MutableMap<String, Any>): Call<ResultBean<UploadResult>>
+    @POST("http://192.168.2.202:8888/service/upload/file")
+    fun uploadMap(@PartMap map: MutableMap<String, Any>): Observable<ResultBean<UploadResult>>
 }

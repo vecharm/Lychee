@@ -2,9 +2,9 @@ package com.vecharm.lychee.sample.rxjava2.task
 
 import android.widget.Toast
 import com.vecharm.lychee.http.config.defaults.getService
-import com.vecharm.lychee.http.config.defaults.upload
 import com.vecharm.lychee.http.task.SpeedTask
 import com.vecharm.lychee.sample.rxjava2.api.API
+import com.vecharm.lychee.sample.rxjava2.api.upload
 import com.vecharm.lychee.sample.rxjava2.ui.App
 import java.io.File
 

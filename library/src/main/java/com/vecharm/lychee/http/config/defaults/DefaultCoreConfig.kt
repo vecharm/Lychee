@@ -10,6 +10,7 @@ import okhttp3.CookieJar
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -43,7 +44,7 @@ abstract class DefaultCoreConfig : ICoreConfig {
     override fun onInitRetrofit(builder: Retrofit.Builder): Retrofit.Builder {
         getHostString()?.also { builder.baseUrl(it) }
         getHostHttpUrl()?.also { builder.baseUrl(it) }
-        builder.addConverterFactory(GsonConverterFactory.create())
+        getGsonConverterFactory()?.also { builder.addConverterFactory(it) }
         return builder
     }
 
@@ -85,6 +86,8 @@ abstract class DefaultCoreConfig : ICoreConfig {
             ?: DefaultResponseHandler::class.java
         return handlerClass.newInstance() as IResponseHandler<T>
     }
+
+    open fun getGsonConverterFactory(): Converter.Factory? = GsonConverterFactory.create()
 
 
     /**

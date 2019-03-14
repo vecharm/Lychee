@@ -39,6 +39,8 @@ dependencies {
     api 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
     api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+
+    api 'com.squareup.retrofit2:retrofit:2.4.0'
 }
 repositories {
     mavenCentral()

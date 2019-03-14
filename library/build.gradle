@@ -2,10 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
+
 android {
     compileSdkVersion 28
-
-
 
     defaultConfig {
         minSdkVersion 19
@@ -35,12 +34,88 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 
-    api 'com.squareup.okhttp3:okhttp:3.10.0'
-    api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    api 'com.squareup.retrofit2:retrofit:2.4.0'
+    compileOnly 'com.squareup.retrofit2:retrofit:2.4.0'
     api 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
     mavenCentral()
+}
+
+
+
+//===================bintray=====================//
+
+//配置插件
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+version = "1.0.0"
+group="com.vecharm.lychee"
+
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                // Add your description here
+                name 'Lychee 是一个基于Retrofit实现的轻量级网络请求库'     //项目描述
+                url "https://github.com/VipMinF/Lychee"
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'vecharm'        //填写开发者的一些基本信息
+                        name 'vecharm'    //填写开发者的一些基本信息
+                        email 'vip.minf@qq.com'   //填写开发者的一些基本信息
+                    }
+                }
+                scm {
+                    connection "https://github.com/VipMinF"
+                    developerConnection "https://github.com/VipMinF"
+                    url "https://github.com/VipMinF"
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("BINTRA_USER")    //读取 local.properties 文件里面的 bintray.user
+    key = properties.getProperty("BINTRA_KEY")   //读取 local.properties 文件里面的 bintray.apikey
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "lychee"    //发布到JCenter上的项目名字，必须填写
+        websiteUrl = "https://github.com/VipMinF"
+        vcsUrl = "https://github.com/VipMinF"
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
 }

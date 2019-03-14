@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -36,4 +34,6 @@ dependencies {
     implementation project(":library")
     api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+
+    api 'com.squareup.retrofit2:retrofit:2.4.0'
 }

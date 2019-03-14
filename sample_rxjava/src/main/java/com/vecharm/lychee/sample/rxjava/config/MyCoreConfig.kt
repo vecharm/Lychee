@@ -17,6 +17,7 @@ import com.vecharm.lychee.sample.rxjava.BuildConfig
 import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 class MyCoreConfig(val context: Application) : DefaultCoreConfig() {

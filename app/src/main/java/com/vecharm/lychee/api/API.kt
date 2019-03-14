@@ -1,6 +1,5 @@
 package com.vecharm.lychee.api
 
-import com.vecharm.lychee.http.config.defaults.ResponseBean
 import com.vecharm.lychee.http.config.interfaces.Download
 import com.vecharm.lychee.http.config.interfaces.FileType
 import com.vecharm.lychee.http.config.interfaces.MultiFileType
@@ -24,13 +23,13 @@ interface API {
 
 
     @FormUrlEncoded
-    @POST("http://192.168.2.202:8888/xboot/upload/file")
+    @POST("http://192.168.2.202:8888/service/upload/file")
     fun upload(@Field("file") @FileType("apk") file: File): Call<ResultBean<UploadResult>>
 
 
     @Multipart
     @MultiFileType("apk")
-    @POST("http://192.168.2.202:8888/xboot/upload/file")
+    @POST("http://192.168.2.202:8888/service/upload/file")
     fun uploadMap(@PartMap map: MutableMap<String, Any>): Call<ResultBean<UploadResult>>
 
 }
