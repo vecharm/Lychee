@@ -110,5 +110,5 @@ interface ICoreConfig {
     @POST("hello")
     fun hello(): Call<ResultBean<String>>
 ```
-#### 简约，轻奢 代码之美，这样写代码才像极了爱情。喜欢的话给个star鼓励一下我哟，感谢各位大大。
+#### 简约，轻奢才是代码之美，这样写代码才像极了爱情。喜欢的话给个star鼓励一下我哟，感谢各位大大。
 
