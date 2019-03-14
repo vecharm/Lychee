@@ -28,10 +28,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
+        //普通请求
         getService<API>().hello().request {
             onSuccess = { Toast.makeText(App.app, it.data ?: "", Toast.LENGTH_SHORT).show() }
+            onErrorMessage = {}
+            onCompleted = {}
         }
 
+        //单个文件下载
         getService<API>().download().request(File(App.app.externalCacheDir, "qq.apk")) {
             onSuccess = { Toast.makeText(App.app, "${it.downloadInfo?.fileName} 下载完成", Toast.LENGTH_SHORT).show() }
         }

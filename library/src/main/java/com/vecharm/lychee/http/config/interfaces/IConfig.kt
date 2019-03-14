@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 
 /**
  * 整个请求库的核心配置接口
- * 样例请参考
+ * 默认配置
  * @see com.vecharm.lychee.http.config.defaults.DefaultCoreConfig
  * */
 interface ICoreConfig {
@@ -23,13 +23,13 @@ interface ICoreConfig {
     fun onInitRetrofit(builder: Retrofit.Builder): Retrofit.Builder
 
     /**
-     * 获取请求 请求配置
+     * 获取请求 请求配置 DefaultRequestConfig为默认配置
      * @see com.vecharm.lychee.http.config.defaults.DefaultRequestConfig
      * */
     fun getRequestConfig(): IRequestConfig
 
     /**
-     * 获取返回值处理者
+     * 获取返回值处理者 DefaultResponseHandler为默认配置
      * @see com.vecharm.lychee.http.config.defaults.DefaultResponseHandler
      * */
     fun <T> getResponseHandler(tClass: Class<T>): IResponseHandler<T>

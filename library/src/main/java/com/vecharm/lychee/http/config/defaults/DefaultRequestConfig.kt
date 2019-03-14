@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
  * 可以继承这个类，在这个基础上修改，也可以自己继承接口按照自己的想法实现
  * @see com.vecharm.lychee.http.core.CoreInterceptor
  * */
-abstract class DefaultRequestConfig : IRequestConfig {
+open class DefaultRequestConfig : IRequestConfig {
 
 
     /**
@@ -156,15 +156,15 @@ abstract class DefaultRequestConfig : IRequestConfig {
     }
 
     /**
-     * 不需要参与签名的字段，默认参数名为file的不签名
+     * 不需要参与签名的字段
      * */
-    open fun unSignParamNames(): Array<String>? = arrayOf("file")
+    open fun unSignParamNames(): Array<String>? = null
 
 
     /**
      * 示例->签名规则: 所有变量按字母顺序value组合
      * */
-    fun sign(map: Map<String, String>) =
+    open fun sign(map: Map<String, String>) =
         md5(StringBuilder().also { sb -> map.forEach { sb.append(it.value) } }.toString())
 
     open fun getSortMap(): MutableMap<String, String> = TreeMap()
@@ -184,6 +184,5 @@ abstract class DefaultRequestConfig : IRequestConfig {
             return md.digest().joinToString("") { String.format("%02x", it) }
         }
     }
-
 
 }

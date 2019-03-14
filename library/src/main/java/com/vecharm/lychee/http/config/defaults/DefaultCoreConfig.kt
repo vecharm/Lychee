@@ -2,6 +2,7 @@ package com.vecharm.lychee.http.config.defaults
 
 import android.util.Log
 import com.vecharm.lychee.http.config.interfaces.ICoreConfig
+import com.vecharm.lychee.http.config.interfaces.IRequestConfig
 import com.vecharm.lychee.http.config.interfaces.IResponseHandler
 import com.vecharm.lychee.http.core.CoreInterceptor
 import com.vecharm.lychee.http.log.NewHttpLoggingInterceptor
@@ -45,6 +46,8 @@ abstract class DefaultCoreConfig : ICoreConfig {
         builder.addConverterFactory(GsonConverterFactory.create())
         return builder
     }
+
+    override fun getRequestConfig() = DefaultRequestConfig()
 
 
     /**
