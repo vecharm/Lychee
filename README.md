@@ -1,6 +1,6 @@
 # Lychee
 ## 介绍
-`Lychee` 是一个基于Retrofit实现的轻量级网络请求库，支持多任务上传，下载，断点续传，使用简单，方便。使用注解简化了Retrofit原有的文件上传方式，支持添加**通用请求参数**，**参数签名**(文件使用md5)
+`Lychee` 是一个基于Retrofit2实现的轻量级网络请求库，支持多任务上传，下载，断点续传，使用简单，方便。使用注解简化了Retrofit2原有的文件上传方式，支持添加**通用请求参数**，**参数签名**(文件使用md5)
 
 ## 用法
 
@@ -8,7 +8,7 @@
 ```kotlin
     override fun onCreate() {
         super.onCreate()
-        RequestCore.init(MyCoreConfig(this))
+        LycheeHttp.init(MyCoreConfig(this))
     }
 ```
 #### 使用
@@ -110,5 +110,5 @@ interface ICoreConfig {
     @POST("hello")
     fun hello(): Call<ResultBean<String>>
 ```
-#### 简约，轻奢才是代码之美，这样写代码才像极了爱情。喜欢的话给个star鼓励一下我哟，感谢各位大大。
+#### 简约，才是代码之美，这样写代码才像极了爱情。喜欢的话给个star鼓励一下我哟，感谢各位大大。
 

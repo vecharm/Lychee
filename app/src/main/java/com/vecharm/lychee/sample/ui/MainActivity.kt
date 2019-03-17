@@ -1,4 +1,4 @@
-package com.vecharm.lychee.sample.rxjava.ui
+package com.vecharm.lychee.sample.ui
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -10,14 +10,13 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.vecharm.lychee.sample.api.API
 import com.vecharm.lychee.http.config.defaults.getService
 import com.vecharm.lychee.http.config.defaults.request
 import com.vecharm.lychee.http.task.SpeedTask
-import com.vecharm.lychee.sample.rxjava.R
-import com.vecharm.lychee.sample.rxjava.api.API
-import com.vecharm.lychee.sample.rxjava.api.request
-import com.vecharm.lychee.sample.rxjava.task.DownloadTask
-import com.vecharm.lychee.sample.rxjava.task.UploadTask
+import com.vecharm.lychee.sample.R
+import com.vecharm.lychee.sample.task.DownloadTask
+import com.vecharm.lychee.sample.task.UploadTask
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -28,10 +27,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+        //普通请求
         getService<API>().hello().request {
             onSuccess = { Toast.makeText(App.app, it.data ?: "", Toast.LENGTH_SHORT).show() }
+            onErrorMessage = {}
+            onCompleted = {}
         }
 
+        //单个文件下载
         getService<API>().download().request(File(App.app.externalCacheDir, "qq.apk")) {
             onSuccess = { Toast.makeText(App.app, "${it.downloadInfo?.fileName} 下载完成", Toast.LENGTH_SHORT).show() }
         }

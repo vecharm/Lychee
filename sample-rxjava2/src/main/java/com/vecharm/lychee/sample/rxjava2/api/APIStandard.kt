@@ -35,7 +35,7 @@ inline fun <reified T> Observable<T>.doRequest(callBack: ResultCallBack<T>.() ->
     //回调
     val callback = ResultCallBack<T>().also { callBack.invoke(it) }
 
-    val handler = RequestCore.getResponseHandler(T::class.java).also { it.attachCallBack(callback) }
+    val handler = LycheeHttp.getResponseHandler(T::class.java).also { it.attachCallBack(callback) }
 
     //开始请求
     return this.subscribeOn(Schedulers.io()).map { transformer.invoke(it, callback) }

@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         addUploadTaskButton.setOnClickListener {
             val uploadTask = UploadTask()
-            uploadTask.upload(File(App.app.externalCacheDir, "qq1.apk"))
+            uploadTask.upload(File(App.app.externalCacheDir, "qq.apk"))
             adapter.addData(uploadTask)
         }
 

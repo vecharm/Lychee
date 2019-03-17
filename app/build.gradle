@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.vecharm.lychee"
+        applicationId "com.vecharm.lychee.sample"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -31,7 +31,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 
-    implementation project(":library")
+    implementation project(':lycheehttp')
     api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
 
