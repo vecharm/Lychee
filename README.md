@@ -11,6 +11,25 @@
         LycheeHttp.init(MyCoreConfig(this))
     }
 ```
+### 下载的API定义
+下载只需要使用 `Download` 注解API就可以啦
+```kotlin
+    @Download
+    @GET("https://xxxx/xxxx.apk")
+    fun download(): Call<DownloadBean>
+```
+### 上传的API定义
+上传时使用 `FileType` 和 `MultiFileType` 声明文件的类型就可以啦，MultiFileType是同时声明API所有的文件参数的类型，也可以两个都写FileType会覆盖MultiFileType
+```kotlin
+    @FormUrlEncoded
+    @POST("http://XXX/XXX")
+    fun upload(@Field("file") @FileType("apk") file: File): Call<UploadResult>
+
+    @Multipart
+    @MultiFileType("apk")
+    @POST("http://XXXX/XXXX")
+    fun upload(@PartMap map: MutableMap<String, Any>): Call<UploadResult>
+```
 #### 使用
 ```kotlin
       //普通请求
@@ -31,7 +50,7 @@
       addDownloadTaskButton.setOnClickListener {
           val downloadTask = DownloadTask()
           val file = File(App.app.externalCacheDir, "qq${adapter.data.size + 1}.apk"
-          downloadTask.download("https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk", file)
+          downloadTask.download("https://xxx/xxx.apk", file)
           adapter.addData(downloadTask)
       }
         
@@ -43,25 +62,7 @@
       }
         
 ```
-### 下载的API定义
-下载只需要使用 `Download` 注解API就可以啦
-```kotlin
-    @Download
-    @GET("https://xxxx/xxxx.apk")
-    fun download(): Call<DownloadBean>
-```
-### 上传的API定义
-上传时使用 `FileType` 和 `MultiFileType` 声明文件的类型就可以啦，MultiFileType是同时声明API所有的文件参数的类型，也可以两个都写FileType会覆盖MultiFileType
-```kotlin
-    @FormUrlEncoded
-    @POST("http://XXX/XXX")
-    fun upload(@Field("file") @FileType("apk") file: File): Call<UploadResult>
 
-    @Multipart
-    @MultiFileType("apk")
-    @POST("http://XXXX/XXXX")
-    fun upload(@PartMap map: MutableMap<String, Any>): Call<UploadResult>
-```
 
 以上是用法，接下来的是配置
 ***
