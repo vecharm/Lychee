@@ -2,6 +2,11 @@
 ## 介绍
 `Lychee` 是一个基于Retrofit2实现的轻量级网络请求库，支持多任务上传，下载，断点续传，使用简单，方便。使用注解简化了Retrofit2原有的文件上传方式，支持添加**通用请求参数**，**参数签名**(文件使用md5)
 
+##相关文章
+[基于Retrofit2实现的LycheeHttp](https://juejin.im/post/5c905dcaf265da60da704c25)
+[基于Retrofit2实现的LycheeHttp-使用动态代理实现上传](https://juejin.im/post/5c8db0d0e51d45798322ba54)
+[基于Retrofit2实现的LycheeHttp-多任务下载的实现](https://juejin.im/post/5c8eef6ee51d4563614b183e)
+
 ## 用法
 
 #### 初始化配置
