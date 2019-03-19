@@ -23,19 +23,18 @@ interface API {
     @Download
     fun download(@Url url: String, @Header(RANGE) range: String): Observable<DownloadBean>
 
-    @FormUrlEncoded
-    @POST("http://192.168.2.202:8888/service/upload/file")
-    fun uploadApk(@Field("file") @FileType("apk") file: File): Observable<ResultBean<UploadResult>>
-
-
     @Multipart
+    @POST("http://192.168.2.202:8888/service/upload/file")
+    fun uploadApk(@Part("file") @FileType("apk") file: File): Observable<ResultBean<UploadResult>>
+
+
     @Upload
-//    @MultiFileType("apk")
+    @Multipart
     @POST("http://192.168.2.202:8888/service/upload/file")
     fun uploadMap(@PartMap map: MutableMap<String, Any>): Observable<ResultBean<UploadResult>>
 
-    @FormUrlEncoded
+    @Multipart
     @POST("http://192.168.2.202:8888/service/upload/file")
     @Upload
-    fun upload(@Field("file") file: File): Observable<ResultBean<UploadResult>>
+    fun upload(@Part("file") file: File): Observable<ResultBean<UploadResult>>
 }

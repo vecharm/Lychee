@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.internal.http.HttpHeaders
 import okhttp3.internal.platform.Platform
+import okhttp3.internal.platform.Platform.INFO
 import okio.Buffer
 import okio.GzipSource
 
@@ -25,7 +26,8 @@ import okhttp3.internal.platform.Platform.WARN
  * this class should not be considered stable and may change slightly between releases. If you need
  * a stable logging format, use your own interceptor.
  */
-class LycheeHttpLoggingInterceptor @JvmOverloads constructor(private val logger: Logger = Logger.DEFAULT) : Interceptor {
+class LycheeHttpLoggingInterceptor @JvmOverloads constructor(private val logger: Logger = Logger.DEFAULT) :
+    Interceptor {
 
     @Volatile
     private var level = Level.NONE
@@ -35,7 +37,7 @@ class LycheeHttpLoggingInterceptor @JvmOverloads constructor(private val logger:
      *
      * 上传时最多输出多少kb的日志，避免OOM
      * */
-    var logLengthLimit = 1024 * 100 //100kb
+    var logLengthLimit = 1024 * 10 //10kb
 
     enum class Level {
         /**
@@ -105,7 +107,7 @@ class LycheeHttpLoggingInterceptor @JvmOverloads constructor(private val logger:
              */
             val DEFAULT: Logger = object : Logger {
                 override fun log(message: String) {
-                    Platform.get().log(WARN, message, null)
+                    Platform.get().log(INFO, message, null)
                 }
             }
         }

@@ -19,15 +19,25 @@
     fun download(): Call<DownloadBean>
 ```
 ### 上传的API定义
-上传时使用 `FileType` 和 `MultiFileType` 声明文件的类型就可以啦，MultiFileType是同时声明API所有的文件参数的类型，也可以两个都写FileType会覆盖MultiFileType
+1. 根据文件名称的后缀名获取，使用`Upload` 进行注解
 ```kotlin
-    @FormUrlEncoded
-    @POST("http://XXX/XXX")
-    fun upload(@Field("file") @FileType("apk") file: File): Call<UploadResult>
-
+    @Upload
     @Multipart
-    @MultiFileType("apk")
-    @POST("http://XXXX/XXXX")
+    @POST("http://xxx/xxx")
+    fun upload(@Part("file") file: File): Call<ResultBean<UploadResult>>
+```
+2. 对某个file进行注解，使用`FileType("png")` 或者`FileType("image/png")`
+```kotlin
+    @Multipart
+    @POST("http:/xxx/xxx")
+    fun upload(@Part("file") @FileType("png") file: File): Call<ResultBean<UploadResult>>
+```
+3. 对整个方法的所有file参数进行注解，使用`MultiFileType("png")`或者`MultiFileType("image/png")`
+```kotlin
+    @Multipart
+    @MultiFileType("png")
+    @POST("http://xxx/xxx")
+    fun upload(@PartMap map: MutableMap<String, Any>): Call<ResultBean<UploadResult>>
     fun upload(@PartMap map: MutableMap<String, Any>): Call<UploadResult>
 ```
 #### 使用

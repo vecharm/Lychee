@@ -1,6 +1,7 @@
 package com.vecharm.lychee.http.core
 
 import android.net.Uri
+import com.vecharm.lychee.http.config.interfaces.*
 import okhttp3.internal.Util
 import okio.*
 import retrofit2.Converter
@@ -12,10 +13,6 @@ import java.lang.reflect.Type
 import okio.ForwardingSource
 import okio.Okio
 import okio.BufferedSource
-import com.vecharm.lychee.http.config.interfaces.Download
-import com.vecharm.lychee.http.config.interfaces.FileType
-import com.vecharm.lychee.http.config.interfaces.MultiFileType
-import com.vecharm.lychee.http.config.interfaces.Upload
 import okhttp3.*
 
 
@@ -49,13 +46,17 @@ class CoreCoverFactory : Converter.Factory() {
      * */
     override fun requestBodyConverter(type: Type, parameterAnnotations: Array<Annotation>, methodAnnotations: Array<Annotation>, retrofit: Retrofit): Converter<*, RequestBody>? {
         return when {
-            //参数是File的方式
-            type == File::class.java -> FileConverter(parameterAnnotations.findFileType(), methodAnnotations.findMultiType(), methodAnnotations.isIncludeUpload())
-           //参数是Map的方式
+            //参数是@Part File的方式
+            type == File::class.java -> FileConverter(parameterAnnotations.findFileType(), methodAnnotations.findMultiType(), methodAnnotations.isIncludeUpload(), methodAnnotations.isIncludeFileLog())
+            //参数是Map的方式
             parameterAnnotations.find { it is PartMap } != null -> {
                 //为map中不是File类型的参数找到合适的Coverter
                 var realCover: Converter<*, *>? = null
-                retrofit.converterFactories().filter { it != this }.find { it.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit).also { realCover = it } != null }
+                retrofit.converterFactories().filter { it != this }.find {
+                    it.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit).also {
+                        realCover = it
+                    } != null
+                }
                 if (realCover == null) return null
                 return MapParamsConverter(parameterAnnotations, methodAnnotations, realCover as Converter<Any, RequestBody>)
             }
@@ -70,7 +71,7 @@ class CoreCoverFactory : Converter.Factory() {
 class MapParamsConverter<T>(private val parameterAnnotations: Array<Annotation>, private val methodAnnotations: Array<Annotation>, val delegatePartMapCover: Converter<T, RequestBody>) :
     Converter<T, RequestBody> {
     override fun convert(value: T): RequestBody {
-        return if (value is File) FileConverter(parameterAnnotations.findFileType(), methodAnnotations.findMultiType(), methodAnnotations.isIncludeUpload()).convert(value)
+        return if (value is File) FileConverter(parameterAnnotations.findFileType(), methodAnnotations.findMultiType(), methodAnnotations.isIncludeUpload(), methodAnnotations.isIncludeFileLog()).convert(value)
         else delegatePartMapCover.convert(value)
     }
 }
@@ -112,7 +113,7 @@ class CoreResponseCover(private val isDownloadMethodCover: Boolean, private val 
 }
 
 
-class FileConverter(private val fileType: FileType?, private val multiFileType: MultiFileType?, private val isAutoWried: Boolean) :
+class FileConverter(private val fileType: FileType?, private val multiFileType: MultiFileType?,  private val isAutoWried: Boolean,private val isFileLog: Boolean) :
     Converter<File, RequestBody> {
     override fun convert(value: File): RequestBody {
         //获取后缀名 先判断FileType 然后上MultiFileType
@@ -120,27 +121,29 @@ class FileConverter(private val fileType: FileType?, private val multiFileType: 
         //然后上面两个都没有设置 判断是否设置了Upload注解
         if (isAutoWried) if (subffix == null) subffix = value.name?.substringAfterLast(".", "")
         //都没有设置为了null
-        if (subffix == null || subffix.isEmpty()) return create(null, value)
+        if (subffix == null || subffix.isEmpty()) return create(null, value, isFileLog)
         //判断设置的是 image/png 还是 png
         val type = (if (subffix.contains("/")) subffix else LycheeHttp.getMediaTypeManager()?.getTypeBySuffix(subffix))
-            ?: return create(null, value)
-        return create(MediaType.parse(type), value)
+            ?: return create(null, value, isFileLog)
+        return create(MediaType.parse(type), value, isFileLog)
     }
 }
 
 
-fun create(contentType: MediaType?, file: File?): RequestBody {
+fun create(contentType: MediaType?, file: File?, isFileLog: Boolean): RequestBody {
     if (file == null) throw NullPointerException("content == null")
-    return FileRequestBody(contentType, file)
+    return FileRequestBody(contentType, file, isFileLog)
 }
 
 fun Array<Annotation>.findFileType() = find { it is FileType } as? FileType
 fun Array<Annotation>.findMultiType() = find { it is MultiFileType } as? MultiFileType
 fun Array<Annotation>.isIncludeUpload() = find { it is Upload } != null
+fun Array<Annotation>.isIncludeFileLog() = find { it is FileLog } != null
 
 //callAdapter-> parseParams -> cover -> requestBuild - >request
 //这里是到 cover这一步 构建请求的RequestBody 这时候拿到的file已经是被我改造的UploadFile
-class FileRequestBody(private val contentType: MediaType?, val file: File) : RequestBody() {
+class FileRequestBody(private val contentType: MediaType?, val file: File, private val isFileLog: Boolean) :
+    RequestBody() {
     val uploadFile: UploadFile = if (file is UploadFile) file else UploadFile(file)
 
     override fun contentType() = contentType
@@ -152,7 +155,10 @@ class FileRequestBody(private val contentType: MediaType?, val file: File) : Req
         var source: Source? = null
         try {
             source = Okio.source(file)
-            if (sink is Buffer) sink.writeAll(source)//处理被日志读取的情况
+            if (sink is Buffer) {
+                //处理被日志读取的情况
+                if (isFileLog) sink.writeAll(source)
+            }
             else sink.writeAll(warpSource(source))
         } finally {
             Util.closeQuietly(source)

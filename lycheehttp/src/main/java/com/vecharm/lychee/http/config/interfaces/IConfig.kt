@@ -155,8 +155,14 @@ annotation class MultiFileType(
 * */
 @kotlin.annotation.Retention
 @kotlin.annotation.Target(AnnotationTarget.FUNCTION)
-annotation class Upload(
-    val value: String = "downloadRequest")
+annotation class Upload
+
+/*
+* 上传用的注解，使用这个注解，上传时打印文件的内容
+* */
+@kotlin.annotation.Retention
+@kotlin.annotation.Target(AnnotationTarget.FUNCTION)
+annotation class FileLog
 
 
 /**
@@ -165,5 +171,4 @@ annotation class Upload(
  * */
 @kotlin.annotation.Retention
 @kotlin.annotation.Target(AnnotationTarget.FUNCTION)
-annotation class Download(
-    val value: String = "downloadRequest")
+annotation class Download
