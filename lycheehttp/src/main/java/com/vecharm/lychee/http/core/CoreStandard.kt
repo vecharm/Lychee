@@ -109,4 +109,13 @@ fun md5(srcStr: String): String {
     }
 }
 
+fun File.randomAccessFile() = RandomAccessFile(this,"rwd")
+
+fun File.setRange(range:Long) :RandomAccessFile{
+    if(range == 0L) delete()
+    val accessFile = randomAccessFile()
+    accessFile.seek(range)
+    return accessFile
+}
+
 

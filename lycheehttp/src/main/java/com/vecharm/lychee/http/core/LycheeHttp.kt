@@ -3,6 +3,7 @@ package com.vecharm.lychee.http.core
 import android.os.Handler
 import android.os.Looper
 import com.vecharm.lychee.http.config.interfaces.ICoreConfig
+import com.vecharm.lychee.http.config.interfaces.IMediaTypeManager
 import com.vecharm.lychee.http.config.interfaces.IResponseHandler
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -50,6 +51,10 @@ object LycheeHttp {
      * */
     fun <T> getResponseHandler(tClass: Class<T>): IResponseHandler<T> {
         return coreConfig?.getResponseHandler(tClass) ?: throw java.lang.NullPointerException("responseHandler 不能为空")
+    }
+
+    fun getMediaTypeManager(): IMediaTypeManager? {
+        return coreConfig?.getMediaTypeManager()
     }
 
 

@@ -31,7 +31,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 
-    implementation project(':lycheehttp')
+    api project(':lycheehttp')
+//    implementation 'com.vecharm:lycheehttp:1.0.2'
     api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
 

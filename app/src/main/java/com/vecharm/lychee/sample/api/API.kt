@@ -15,6 +15,7 @@ interface API {
     @POST("hello")
     fun hello(): Call<ResultBean<String>>
 
+
     @Download
     @GET("https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk")
     fun download(): Call<DownloadBean>

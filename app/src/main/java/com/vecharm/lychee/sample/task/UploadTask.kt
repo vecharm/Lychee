@@ -25,7 +25,7 @@ class UploadTask : SpeedTask() {
 
 
     fun upload(file: File) {
-        getService<API>().uploadMap(hashMapOf("file" to file)).upload {
+        getService<API>().upload(file).upload {
             onUpdateProgress = onUpdate
             onSuccess = { Toast.makeText(App.app, "${id}上传完成", Toast.LENGTH_LONG).show() }
         }

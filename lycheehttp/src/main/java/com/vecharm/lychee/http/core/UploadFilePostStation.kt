@@ -12,14 +12,14 @@ object UploadFilePostStation {
     val map = WeakHashMap<String, ArrayList<UploadFile>>()
 
 
-    // first be executed
+    // first be executed 在CallAdapter中调用这个
     fun setCallBack(callBackToken: String, callbackFile: UploadFile) {
         val list = map[callBackToken] ?: ArrayList()
         if (!list.contains(callbackFile)) list.add(callbackFile)
         map[callBackToken] = list
     }
 
-    // second
+    // second 在CallBack调用这个
     fun registerProgressCallback(callBackToken: String, listener: ProgressHelper.ProgressListener) {
         map[callBackToken]?.forEach { it.progressListener = listener }
         map[callBackToken]?.clear()

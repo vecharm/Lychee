@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 helper.getView<ToggleButton>(R.id.taskState).also {
                     if (item is DownloadTask) {
                         it.visibility = View.VISIBLE
-                        it.isChecked = !item.isPause
+                        it.isChecked = !item.isCancel
                         it.setOnCheckedChangeListener { _, _ -> item.toggle { } }
                     } else {
                         it.visibility = View.GONE

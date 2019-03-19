@@ -1,7 +1,6 @@
 package com.vecharm.lychee.http.core
 
 import android.net.Uri
-import android.text.TextUtils
 import okhttp3.internal.Util
 import okio.*
 import retrofit2.Converter
@@ -13,7 +12,6 @@ import java.lang.reflect.Type
 import okio.ForwardingSource
 import okio.Okio
 import okio.BufferedSource
-import android.util.Log
 import com.vecharm.lychee.http.config.interfaces.Download
 import com.vecharm.lychee.http.config.interfaces.FileType
 import com.vecharm.lychee.http.config.interfaces.MultiFileType
@@ -51,15 +49,15 @@ class CoreCoverFactory : Converter.Factory() {
      * */
     override fun requestBodyConverter(type: Type, parameterAnnotations: Array<Annotation>, methodAnnotations: Array<Annotation>, retrofit: Retrofit): Converter<*, RequestBody>? {
         return when {
-            type == File::class.java -> FileCover(parameterAnnotations.findFileType(), methodAnnotations.findMultiType(), methodAnnotations.isIncludeUpload())
+            //参数是File的方式
+            type == File::class.java -> FileConverter(parameterAnnotations.findFileType(), methodAnnotations.findMultiType(), methodAnnotations.isIncludeUpload())
+           //参数是Map的方式
             parameterAnnotations.find { it is PartMap } != null -> {
-                var delegateCover: Converter<*, *>? = null
-                retrofit.converterFactories().filter { it != this }.find {
-                    delegateCover =
-                        it.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit); delegateCover != null
-                }
-                if (delegateCover == null) return null
-                return MapParamsCover(parameterAnnotations, methodAnnotations, delegateCover as Converter<Any, RequestBody>)
+                //为map中不是File类型的参数找到合适的Coverter
+                var realCover: Converter<*, *>? = null
+                retrofit.converterFactories().filter { it != this }.find { it.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit).also { realCover = it } != null }
+                if (realCover == null) return null
+                return MapParamsConverter(parameterAnnotations, methodAnnotations, realCover as Converter<Any, RequestBody>)
             }
             else -> null
         }
@@ -69,10 +67,10 @@ class CoreCoverFactory : Converter.Factory() {
 /**
  * map类型的参数处理
  * */
-class MapParamsCover<T>(private val parameterAnnotations: Array<Annotation>, private val methodAnnotations: Array<Annotation>, val delegatePartMapCover: Converter<T, RequestBody>) :
+class MapParamsConverter<T>(private val parameterAnnotations: Array<Annotation>, private val methodAnnotations: Array<Annotation>, val delegatePartMapCover: Converter<T, RequestBody>) :
     Converter<T, RequestBody> {
     override fun convert(value: T): RequestBody {
-        return if (value is File) FileCover(parameterAnnotations.findFileType(), methodAnnotations.findMultiType(), methodAnnotations.isIncludeUpload()).convert(value)
+        return if (value is File) FileConverter(parameterAnnotations.findFileType(), methodAnnotations.findMultiType(), methodAnnotations.isIncludeUpload()).convert(value)
         else delegatePartMapCover.convert(value)
     }
 }
@@ -114,12 +112,18 @@ class CoreResponseCover(private val isDownloadMethodCover: Boolean, private val 
 }
 
 
-class FileCover(private val fileType: FileType?, private val multiFileType: MultiFileType?, private val isAutoWried: Boolean) :
+class FileConverter(private val fileType: FileType?, private val multiFileType: MultiFileType?, private val isAutoWried: Boolean) :
     Converter<File, RequestBody> {
     override fun convert(value: File): RequestBody {
-        var type = fileType?.value ?: multiFileType?.value
-        if (isAutoWried) if (type == null) type = value.name?.substringAfterLast(".", "")
-        if (type == null || type.isEmpty()) return create(null, value)
+        //获取后缀名 先判断FileType 然后上MultiFileType
+        var subffix = fileType?.value ?: multiFileType?.value
+        //然后上面两个都没有设置 判断是否设置了Upload注解
+        if (isAutoWried) if (subffix == null) subffix = value.name?.substringAfterLast(".", "")
+        //都没有设置为了null
+        if (subffix == null || subffix.isEmpty()) return create(null, value)
+        //判断设置的是 image/png 还是 png
+        val type = (if (subffix.contains("/")) subffix else LycheeHttp.getMediaTypeManager()?.getTypeBySuffix(subffix))
+            ?: return create(null, value)
         return create(MediaType.parse(type), value)
     }
 }

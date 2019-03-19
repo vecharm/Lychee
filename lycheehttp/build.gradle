@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.dokka-android'
-//apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 28
@@ -47,7 +46,7 @@ repositories {
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "1.0.0"
+version = "1.0.2"
 group="com.vecharm"
 
 
@@ -116,7 +115,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "AndroidLib"
-        name = "lychee"    //发布到JCenter上的项目名字，必须填写
+        name = "lychee"
         websiteUrl = "https://github.com/VipMinF"
         vcsUrl = "https://github.com/VipMinF"
         licenses = ["Apache-2.0"]

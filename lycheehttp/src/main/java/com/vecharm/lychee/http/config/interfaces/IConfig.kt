@@ -34,6 +34,10 @@ interface ICoreConfig {
      * */
     fun <T> getResponseHandler(tClass: Class<T>): IResponseHandler<T>
 
+
+    fun getMediaTypeManager(): IMediaTypeManager
+
+
 }
 
 /**
@@ -65,7 +69,9 @@ interface IRequestConfig {
      * @see com.vecharm.lychee.http.config.defaults.DefaultRequestConfig.addHeaders
      * */
     fun addHeaders(newRequestBuild: Request.Builder, oldRequest: Request)
+
 }
+
 
 /**
  * 返回值处理者的接口，可以配置不同的返回值处理，但一般情况都是只有一个
@@ -94,6 +100,17 @@ interface IResponseHandler<T> {
     fun attachCallBack(callBack: ResultCallBack<T>)
 
     fun getCallBack(): ResultCallBack<T>?
+
+}
+
+
+interface IMediaTypeManager {
+    /**
+     *
+     * 根据后缀名获取类型
+     *
+     * */
+    fun getTypeBySuffix(suffix: String): String?
 
 }
 

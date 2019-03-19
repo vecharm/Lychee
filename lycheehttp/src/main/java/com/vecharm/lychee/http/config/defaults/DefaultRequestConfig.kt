@@ -143,7 +143,7 @@ open class DefaultRequestConfig : IRequestConfig {
     private fun addCommonParamsAndSign(map: MutableMap<String, String>) {
         onAddCommonParams(map)
         //默认签名方式是按照参考名称排序
-        onSignParams(map)
+        if (isSignParam()) onSignParams(map)
     }
 
     open fun onAddCommonParams(map: MutableMap<String, String>) {}
@@ -160,6 +160,10 @@ open class DefaultRequestConfig : IRequestConfig {
      * */
     open fun unSignParamNames(): Array<String>? = null
 
+    /**
+     * 是否参数签名
+     * */
+    open fun isSignParam() = false
 
     /**
      * 示例->签名规则: 所有变量按字母顺序value组合

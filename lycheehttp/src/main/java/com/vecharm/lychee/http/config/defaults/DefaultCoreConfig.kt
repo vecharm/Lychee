@@ -1,6 +1,8 @@
 package com.vecharm.lychee.http.config.defaults
 
+import android.support.annotation.CallSuper
 import com.vecharm.lychee.http.config.interfaces.ICoreConfig
+import com.vecharm.lychee.http.config.interfaces.IMediaTypeManager
 import com.vecharm.lychee.http.config.interfaces.IResponseHandler
 import com.vecharm.lychee.http.log.LycheeHttpLoggingInterceptor
 import okhttp3.CookieJar
@@ -28,6 +30,7 @@ abstract class DefaultCoreConfig : ICoreConfig {
      * 方法返回值的处理
      * @see DefaultResponseHandler
      * */
+    @CallSuper
     override fun onInitClient(builder: OkHttpClient.Builder): OkHttpClient.Builder {
         builder.connectTimeout(connectTimeout().toLong(), TimeUnit.SECONDS)
             .readTimeout(readTimeout().toLong(), TimeUnit.SECONDS)
@@ -38,6 +41,7 @@ abstract class DefaultCoreConfig : ICoreConfig {
         return builder
     }
 
+    @CallSuper
     override fun onInitRetrofit(builder: Retrofit.Builder): Retrofit.Builder {
         getHostString()?.also { builder.baseUrl(it) }
         getHostHttpUrl()?.also { builder.baseUrl(it) }
@@ -47,7 +51,7 @@ abstract class DefaultCoreConfig : ICoreConfig {
 
     override fun getRequestConfig() = DefaultRequestConfig()
 
-
+    override fun getMediaTypeManager() = DefaultMediaTypeManager()
     /**
      * cookie缓存，默认为null
      * */

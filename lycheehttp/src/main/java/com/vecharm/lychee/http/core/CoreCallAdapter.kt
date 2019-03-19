@@ -64,7 +64,7 @@ class CoreCallAdapter : CallAdapter.Factory() {
                         //如果上面的操作失败了，就用request()，最终执行一遍Cover生成
                         list = getFileRequestBody(okHttpCall.request()?.body())
                     }
-                    //将返回值对象的toString 和 WrapFile 关联起来，因为一次可能上传多个文件就用数组了
+                    //将返回值对象的toString 和UploadFile 关联起来，因为一次可能上传多个文件就用数组了
                     list.forEach { UploadFilePostStation.setCallBack(returnObj.toString(), it) }
                 }
 

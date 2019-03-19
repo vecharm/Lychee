@@ -25,7 +25,7 @@ inline fun <reified T> Call<T>.request(callBack: ResultCallBack<T>.() -> Unit): 
 }
 
 inline fun <reified T> Call<T>.request(saveFile: File, callBackC: ResultCallBack<T>.() -> Unit): Call<T> {
-    return request(RandomAccessFile(saveFile, "rwd"), callBackC)
+    return request(saveFile.randomAccessFile(), callBackC)
 }
 
 inline fun <reified T> Call<T>.request(saveFile: RandomAccessFile, callBack: ResultCallBack<T>.() -> Unit): Call<T> {
@@ -61,8 +61,7 @@ open class ResponseCallBack<T>(private val handler: IResponseHandler<T>) : Callb
         try {
             val data = response.body()
             if (response.isSuccessful) {
-                if (data == null) handler.onError(HttpException(response))
-                else onHandler(data)
+                if (data == null) handler.onError(HttpException(response)) else onHandler(data)
             } else handler.onError(HttpException(response))
 
         } catch (t: Throwable) {

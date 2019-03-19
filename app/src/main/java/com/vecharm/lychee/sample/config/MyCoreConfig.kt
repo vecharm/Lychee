@@ -6,14 +6,13 @@ import android.widget.Toast
 import com.franmontiel.persistentcookiejar.PersistentCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
-import com.vecharm.lychee.sample.ui.App
-import com.vecharm.lychee.BuildConfig
-
 import com.vecharm.lychee.http.config.defaults.DefaultCoreConfig
 import com.vecharm.lychee.http.config.defaults.DefaultRequestConfig
 import com.vecharm.lychee.http.config.defaults.DefaultResponseHandler
 import com.vecharm.lychee.http.config.defaults.ResponseBean
 import com.vecharm.lychee.http.core.md5
+import com.vecharm.lychee.sample.ui.App
+
 import okhttp3.Request
 import java.util.*
 
@@ -49,12 +48,13 @@ class MyRequestConfig : DefaultRequestConfig() {
      * 添加通用参数
      * */
     override fun onAddCommonParams(map: MutableMap<String, String>) {
-        map["app_version"] = BuildConfig.VERSION_CODE.toString()
+        map["app_version"] = com.vecharm.lychee.sample.BuildConfig.VERSION_CODE.toString()
         map["nonce"] = map["nonce"] ?: randomUUID()
         map["timestamp"] = System.currentTimeMillis().div(1000).toString()
         map["pkg_name"] = App.app.packageName
         map["app_sign"] = getAppSign()
     }
+
 
     /**
      * 参数签名
@@ -76,6 +76,10 @@ class MyRequestConfig : DefaultRequestConfig() {
             ""
         }
     }
+    /**
+     * 是否参数签名
+     * */
+    override fun isSignParam() = true
 
 }
 
