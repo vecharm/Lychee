@@ -124,7 +124,7 @@ interface ICoreConfig {
 如果你喜欢用RxJava或者RxJava2 
 ```kotlin
     @POST("hello")
-    fun hello(): Call<ResultBean<String>>
+    fun hello(): Observable<ResultBean<String>>
 ```
 #### 简约，才是代码之美，这样写代码才像极了爱情。喜欢的话给个star鼓励一下我哟，感谢各位大大。
 
